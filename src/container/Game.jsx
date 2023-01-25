@@ -3,32 +3,47 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import withParams from "../components/withParams";
-import { selectMode, clickCell } from "../redux/action";
+import {
+  startGame,
+  clickCell,
+  stickMineFlag,
+  stickQuestionMark,
+  resetCell,
+} from "../redux/action";
 import Td from "../components/Td";
 
 class Game extends React.Component {
   componentDidMount() {
-    const { params } = this.props;
-    this.props.selectMode(params.mode);
+    const { params, dispatchStartGame } = this.props;
+    dispatchStartGame(params.mode);
   }
 
   componentDidUpdate() {
-    if (this.props.gameStatus === "fail") {
+    const { gameStatus } = this.props;
+
+    if (gameStatus === "fail") {
       console.log("game over");
+    }
+
+    if (gameStatus === "success") {
+      console.log("success");
     }
   }
 
-  handleClickEvent = index => {
-    this.props.clickCell(index);
-  };
-
   render() {
-    const { table, gameStatus } = this.props;
+    const {
+      table,
+      gameStatus,
+      dispatchClickCell,
+      dispatchStickMingFlag,
+      dispatchStickQuestionMark,
+      dispatchResetCell,
+    } = this.props;
 
     return (
       <div>
         <div className="flex flex-col">
-          {gameStatus === "Fail" && <div>fail</div>}
+          <div>{gameStatus}</div>
           <table className="table-auto">
             <tbody>
               {table.map((rowArr, row) => {
@@ -40,7 +55,12 @@ class Game extends React.Component {
                         row={row}
                         col={col}
                         content={content}
-                        click={this.handleClickEvent}
+                        onClickCell={dispatchClickCell}
+                        onStickFlag={dispatchStickMingFlag}
+                        onStickQuestionMark={dispatchStickQuestionMark}
+                        onResetCell={dispatchResetCell}
+                        onMouseDown={dispatchClickCell}
+                        click={dispatchClickCell}
                       />
                     ))}
                   </tr>
@@ -55,23 +75,29 @@ class Game extends React.Component {
 }
 
 Game.propTypes = {
-  selectMode: PropTypes.func.isRequired,
-  clickCell: PropTypes.func.isRequired,
+  dispatchStartGame: PropTypes.func.isRequired,
+  dispatchClickCell: PropTypes.func.isRequired,
+  dispatchStickMingFlag: PropTypes.func.isRequired,
+  dispatchStickQuestionMark: PropTypes.func.isRequired,
+  dispatchResetCell: PropTypes.func.isRequired,
   params: PropTypes.object.isRequired,
   table: PropTypes.array.isRequired,
   gameStatus: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
-  x: state.status.x,
-  y: state.status.y,
+  row: state.status.row,
+  col: state.status.col,
   table: state.status.table,
   gameStatus: state.status.gameStatus,
 });
 
 const mapDispatchToProps = {
-  selectMode,
-  clickCell,
+  dispatchStartGame: startGame,
+  dispatchClickCell: clickCell,
+  dispatchStickMingFlag: stickMineFlag,
+  dispatchStickQuestionMark: stickQuestionMark,
+  dispatchResetCell: resetCell,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withParams(Game));

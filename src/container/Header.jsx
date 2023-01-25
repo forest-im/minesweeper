@@ -5,14 +5,14 @@ import Timer from "./Timer";
 
 class Header extends React.PureComponent {
   render() {
-    const { mode, mines } = this.props;
+    const { mode, minesCount } = this.props;
 
     return (
       <div className="flex flex-row justify-between w-1/2 text-2xl border-solid border-2 border-sky-500 p-10">
         <Timer />
         <div>{mode}</div>
         <div>😊</div>
-        <div>{mines}</div>
+        <div>{minesCount}</div>
       </div>
     );
   }
@@ -20,7 +20,7 @@ class Header extends React.PureComponent {
 
 Header.propTypes = {
   mode: PropTypes.string.isRequired,
-  mines: PropTypes.number.isRequired,
+  minesCount: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
