@@ -1,126 +1,135 @@
 /* eslint-disable default-param-last */
-import { SELECT_MODE, CLICK_CELL } from "../actionTypes";
+import {
+  START_GAME,
+  CLICK_CELL,
+  STICK_MINE_FLAG,
+  STICK_QUESTION_MARK,
+  RESET_CELL,
+} from "../actionTypes";
 import { MODES, FLAG, GAME_STATUS } from "../../lib/constants";
-import createRandomNumbers from "../../lib/utils/createRandomNumbers";
+import { checkAround, createNew2DArray, mappingMinesToTable } from "../utils";
 
 const initialState = {
   gameStatus: GAME_STATUS.PROCEEDING,
   mode: "easy",
-  mines: 10,
   table: [],
+  row: 0,
+  col: 0,
+  minesCount: 0,
+  minesIndexObj: {},
+  finishCellCount: 0,
 };
-
-function createNewTable(minesArr, rowCount, colCount) {
-  return minesArr.reduce(
-    (table, mine) => {
-      const copyTable = [...table];
-      const row = Math.floor((mine - 1) / colCount);
-      const col = (mine - 1) % colCount;
-
-      copyTable[row][col] = FLAG.MINE;
-
-      return copyTable;
-    },
-    Array(rowCount)
-      .fill(FLAG.EMPTY)
-      .map(() => Array(colCount).fill(FLAG.EMPTY)),
-  );
-}
-
-function createTableDataObj(table, row, col) {
-  return {
-    flag: table[row][col],
-    row,
-    col,
-  };
-}
-
-function checkAround(table, row, col, mark) {
-  if (table[row][col] !== FLAG.EMPTY || mark[`${row}-${col}`]) return;
-
-  const copyMark = { ...mark };
-  const copyTable = [...table];
-  copyMark[`${row}-${col}`] = "visited";
-  copyTable[row][col] = FLAG.OPENED;
-
-  const aroundCellData = [];
-  const aroundEmptyCellArray = [];
-
-  if (table[row - 1]) {
-    aroundCellData.push(
-      createTableDataObj(table, row - 1, col - 1),
-      createTableDataObj(table, row - 1, col),
-      createTableDataObj(table, row - 1, col + 1),
-    );
-  }
-
-  aroundCellData.push(
-    createTableDataObj(table, row, col - 1),
-    createTableDataObj(table, row, col + 1),
-  );
-
-  if (table[row + 1]) {
-    aroundCellData.push(
-      createTableDataObj(table, row + 1, col - 1),
-      createTableDataObj(table, row + 1, col),
-      createTableDataObj(table, row + 1, col + 1),
-    );
-  }
-
-  while (aroundCellData.length) {
-    const cellData = aroundCellData.pop();
-
-    if (cellData.flag && cellData.flag !== FLAG.MINE) {
-      aroundEmptyCellArray.push(cellData);
-    }
-  }
-
-  if (aroundEmptyCellArray.length === FLAG.AROUND_ALL_EMPTY) {
-    aroundEmptyCellArray.forEach(cell => {
-      return checkAround(table, cell.row, cell.col, mark);
-    });
-  } else {
-    copyTable[row][col] = FLAG.AROUND_ALL_EMPTY - aroundEmptyCellArray.length;
-  }
-}
 
 const status = (state = initialState, action) => {
   switch (action.type) {
-    case SELECT_MODE: {
+    case START_GAME: {
       const { mode } = action.payload;
-
-      const newX = MODES[mode.toUpperCase()].X;
-      const newY = MODES[mode.toUpperCase()].Y;
-      const newMines = MODES[mode.toUpperCase()].MINES;
 
       return {
         ...state,
         mode,
-        mines: newMines,
-        table: createNewTable(
-          createRandomNumbers(newX * newY, newMines),
-          newX,
-          newY,
-        ),
+        row: MODES[mode].ROW,
+        col: MODES[mode].COL,
+        table: createNew2DArray(MODES[mode].ROW, MODES[mode].COL),
+        minesCount: MODES[mode].MINES_COUNT,
       };
     }
     case CLICK_CELL: {
-      const newState = { ...state };
-      newState.table = [...state.table];
+      const newMinesIndexObj = state.minesIndexObj;
       const { row, col } = action.payload.clickedCellIndex;
+      const newTable = Object.keys(state.minesIndexObj).length
+        ? [...state.table]
+        : mappingMinesToTable(
+            state.row,
+            state.col,
+            state.minesCount,
+            state.table,
+            state.minesIndexObj,
+          );
 
-      if (newState.table[row][col] === 9) {
+      if (newTable[row][col] === FLAG.MINE) {
+        return {
+          ...state,
+          gameStatus: GAME_STATUS.FAIL,
+        };
+      }
+
+      if (newTable[row][col] > 0 && newTable[row][col] < 10) {
         return state;
       }
 
-      if (newState.table[row][col] === -1) {
-        newState.gameStatus = GAME_STATUS.FAIL;
+      const visitedCell = {};
+
+      checkAround(newTable, row, col, visitedCell);
+
+      visitedCell[`${row}-${col}`] = "visited";
+
+      const newFinishCellCount =
+        state.finishCellCount + Object.keys(visitedCell).length;
+
+      const newGameStatus =
+        newFinishCellCount === state.row * state.col
+          ? GAME_STATUS.SUCCESS
+          : GAME_STATUS.PROCEEDING;
+
+      return {
+        ...state,
+        table: newTable,
+        gameStatus: newGameStatus,
+        finishCellCount: newFinishCellCount,
+        minesIndexObj: newMinesIndexObj,
+      };
+    }
+    case STICK_MINE_FLAG: {
+      const newState = { ...state };
+      const { row, col } = action.payload.clickedCellIndex;
+
+      if (state.table[row][col] === FLAG.MINE_FLAG) return state;
+
+      newState.table = [...state.table];
+
+      newState.table[row][col] = FLAG.MINE_FLAG;
+
+      newState.finishCellCount = state.minesIndexObj[`${row}-${col}`]
+        ? state.finishCellCount + 1
+        : state.finishCellCount;
+
+      newState.gameStatus =
+        newState.finishCellCount === state.row * state.col
+          ? GAME_STATUS.SUCCESS
+          : GAME_STATUS.PROCEEDING;
+
+      return newState;
+    }
+    case STICK_QUESTION_MARK: {
+      const newState = { ...state };
+      const { row, col } = action.payload.clickedCellIndex;
+
+      newState.table = [...state.table];
+
+      newState.table[row][col] = FLAG.QUESTION_MARK;
+
+      newState.finishCellCount = state.minesIndexObj[`${row}-${col}`]
+        ? state.finishCellCount - 1
+        : state.finishCellCount;
+
+      return newState;
+    }
+    case RESET_CELL: {
+      const newState = { ...state };
+      const { row, col } = action.payload.clickedCellIndex;
+
+      newState.table = [...state.table];
+
+      if (state.minesIndexObj[`${row}-${col}`]) {
+        newState.table[row][col] = FLAG.MINE;
+
+        newState.finishCellCount = state.finishCellCount - 1;
+
         return newState;
       }
 
-      const { table } = newState;
-
-      checkAround(table, row, col, {});
+      newState.table[row][col] = FLAG.EMPTY;
 
       return newState;
     }
