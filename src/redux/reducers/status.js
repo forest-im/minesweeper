@@ -1,4 +1,3 @@
-/* eslint-disable default-param-last */
 import {
   START_GAME,
   CLICK_CELL,
@@ -21,6 +20,7 @@ const initialState = {
   finishCellCount: 0,
 };
 
+/* eslint-disable default-param-last */
 const status = (state = initialState, action) => {
   switch (action.type) {
     case START_GAME: {

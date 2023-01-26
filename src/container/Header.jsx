@@ -47,6 +47,7 @@ class Header extends React.PureComponent {
       dispatchStartGame,
       dispatchToggleModal,
     } = this.props;
+    const { currentStatus } = this.state;
 
     return (
       <>
@@ -78,9 +79,7 @@ class Header extends React.PureComponent {
             />
           </div>
           <div>
-            <div className={styleConfig.header.base}>
-              {this.state.currentStatus}
-            </div>
+            <div className={styleConfig.header.base}>{currentStatus}</div>
           </div>
           <div className="grid place-items-center">
             <div className={`${styleConfig.header.base} grid-cols-2`}>
