@@ -1,18 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { MODES } from "../lib/constants";
+import Menu from "./Menu";
 
 class Mode extends React.PureComponent {
   render() {
     return (
-      <div className="flex flex-col">
+      <div className="flex w-fit flex-col rounded-xl bg-amber-300 shadow-inner">
         {Object.keys(MODES).map(mode => (
-          <Link
-            key={mode}
-            to={`/game/${mode.toLowerCase()}`}
-            className="bg-black text-center text-white m-4 rounded-md p-2 hover:bg-slate-600 w-44"
-          >
-            {mode}
+          <Link key={mode} to={`/game/${mode.toLowerCase()}`}>
+            <Menu>{mode.toUpperCase()}</Menu>
           </Link>
         ))}
       </div>

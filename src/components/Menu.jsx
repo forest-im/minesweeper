@@ -1,18 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 
 class Menu extends React.PureComponent {
   render() {
-    const { mode } = this.props;
+    const { children } = this.props;
 
     return (
-      <Link
-        to={`/game/${mode.toLowerCase()}`}
-        className="bg-black text-center text-white m-4 rounded-md p-2 hover:bg-slate-600 w-44"
-      >
-        {mode}
-      </Link>
+      <div className="m-6 rounded border-b-4 border-blue-700 bg-blue-500 py-2 px-4 text-center text-lg font-bold text-white hover:border-blue-500 hover:bg-blue-400">
+        {children}
+      </div>
     );
   }
 }
@@ -20,5 +16,5 @@ class Menu extends React.PureComponent {
 export default Menu;
 
 Menu.propTypes = {
-  mode: PropTypes.string.isRequired,
+  children: PropTypes.string.isRequired,
 };

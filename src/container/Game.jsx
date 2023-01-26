@@ -33,6 +33,7 @@ class Game extends React.Component {
   render() {
     const {
       table,
+      mode,
       gameStatus,
       dispatchClickCell,
       dispatchStickMingFlag,
@@ -41,9 +42,11 @@ class Game extends React.Component {
     } = this.props;
 
     return (
-      <div>
-        <div className="flex flex-col">
-          <div>{gameStatus}</div>
+      <div className="flex justify-center">
+        <div className="flex flex-col items-center">
+          <div className="text-white">
+            {gameStatus === "Success" ? "Success!" : mode.toUpperCase()}
+          </div>
           <table className="table-auto">
             <tbody>
               {table.map((rowArr, row) => {
@@ -55,12 +58,12 @@ class Game extends React.Component {
                         row={row}
                         col={col}
                         content={content}
+                        gameStatus={gameStatus}
                         onClickCell={dispatchClickCell}
                         onStickFlag={dispatchStickMingFlag}
                         onStickQuestionMark={dispatchStickQuestionMark}
                         onResetCell={dispatchResetCell}
                         onMouseDown={dispatchClickCell}
-                        click={dispatchClickCell}
                       />
                     ))}
                   </tr>
@@ -75,21 +78,20 @@ class Game extends React.Component {
 }
 
 Game.propTypes = {
+  params: PropTypes.object.isRequired,
+  table: PropTypes.array.isRequired,
+  mode: PropTypes.string.isRequired,
+  gameStatus: PropTypes.string.isRequired,
   dispatchStartGame: PropTypes.func.isRequired,
   dispatchClickCell: PropTypes.func.isRequired,
   dispatchStickMingFlag: PropTypes.func.isRequired,
   dispatchStickQuestionMark: PropTypes.func.isRequired,
   dispatchResetCell: PropTypes.func.isRequired,
-  params: PropTypes.object.isRequired,
-  table: PropTypes.array.isRequired,
-  gameStatus: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
-  row: state.status.row,
-  col: state.status.col,
-  table: state.status.table,
-  gameStatus: state.status.gameStatus,
+  ...state.status,
+  ...state.base,
 });
 
 const mapDispatchToProps = {
