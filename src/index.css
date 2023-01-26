@@ -8,10 +8,9 @@
     height: 100%;
   }
   body {
+    font-family: "Rubik", sans-serif;
     overflow-x: hidden;
-    font-weight: 300;
-    /* margin: 10rem; */
-    padding: 5rem;
+    background-color: #e0f1ff;
     box-sizing: border-box;
     width: 100%;
     height: 100%;
