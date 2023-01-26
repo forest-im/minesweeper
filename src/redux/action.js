@@ -4,6 +4,8 @@ import {
   STICK_MINE_FLAG,
   STICK_QUESTION_MARK,
   RESET_CELL,
+  TIMEOUT,
+  TOGGLE_MODAL,
 } from "./actionTypes";
 
 export const startGame = mode => ({ type: START_GAME, payload: { mode } });
@@ -28,4 +30,12 @@ export const stickQuestionMark = clickedCellIndex => ({
 export const resetCell = clickedCellIndex => ({
   type: RESET_CELL,
   payload: { clickedCellIndex },
+});
+
+export const timeOut = () => ({
+  type: TIMEOUT,
+});
+
+export const toggleModal = () => ({
+  type: TOGGLE_MODAL,
 });

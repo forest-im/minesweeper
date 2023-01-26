@@ -17,6 +17,8 @@ export function changeSequenceTo2DArrIndex(sequenceNumber, colLength) {
 export function mappingMinesToTable(
   row,
   col,
+  clickedRow,
+  clickedCol,
   minesCount,
   table,
   minesIndexObj,
@@ -24,7 +26,7 @@ export function mappingMinesToTable(
   const minesArr = createRandomNumbers(
     row * col,
     minesCount,
-    row * col + col + 1,
+    clickedRow * col + clickedCol + 1,
   );
   const copyMinesIndexObj = minesIndexObj;
 
@@ -98,13 +100,20 @@ export function checkAround(table, row, col, mark) {
     }
   }
 
-  if (aroundEmptyCellArray.length === FLAG.AROUND_ALL_EMPTY) {
+  if (
+    aroundEmptyCellArray.length === FLAG.AROUND_ALL_EMPTY - 1 ||
+    (outsideCellCount === 3 && aroundEmptyCellArray.length === 5) ||
+    (outsideCellCount === 4 && aroundEmptyCellArray.length === 4) ||
+    (outsideCellCount === 5 && aroundEmptyCellArray.length === 3)
+  ) {
     aroundEmptyCellArray.forEach(cell => {
       return checkAround(table, cell.row, cell.col, mark);
     });
   } else {
     copyTable[row][col] =
-      FLAG.AROUND_ALL_EMPTY - aroundEmptyCellArray.length - outsideCellCount ||
-      FLAG.AROUND_ALL_EMPTY;
+      FLAG.AROUND_ALL_EMPTY -
+        1 -
+        aroundEmptyCellArray.length -
+        outsideCellCount || FLAG.AROUND_ALL_EMPTY;
   }
 }

@@ -5,6 +5,7 @@ import {
   STICK_MINE_FLAG,
   STICK_QUESTION_MARK,
   RESET_CELL,
+  TIMEOUT,
 } from "../actionTypes";
 import { MODES, FLAG, GAME_STATUS } from "../../lib/constants";
 import { checkAround, createNew2DArray, mappingMinesToTable } from "../utils";
@@ -26,15 +27,19 @@ const status = (state = initialState, action) => {
       const { mode } = action.payload;
 
       return {
-        ...state,
+        ...initialState,
         mode,
+        table: createNew2DArray(MODES[mode].ROW, MODES[mode].COL),
         row: MODES[mode].ROW,
         col: MODES[mode].COL,
-        table: createNew2DArray(MODES[mode].ROW, MODES[mode].COL),
         minesCount: MODES[mode].MINES_COUNT,
+        minesIndexObj: {},
+        finishCellCount: 0,
       };
     }
     case CLICK_CELL: {
+      if (state.gameStatus === "Fail") return state;
+
       const newMinesIndexObj = state.minesIndexObj;
       const { row, col } = action.payload.clickedCellIndex;
       const newTable = Object.keys(state.minesIndexObj).length
@@ -42,6 +47,8 @@ const status = (state = initialState, action) => {
         : mappingMinesToTable(
             state.row,
             state.col,
+            row,
+            col,
             state.minesCount,
             state.table,
             state.minesIndexObj,
@@ -81,6 +88,8 @@ const status = (state = initialState, action) => {
       };
     }
     case STICK_MINE_FLAG: {
+      if (state.gameStatus === "Fail") return state;
+
       const newState = { ...state };
       const { row, col } = action.payload.clickedCellIndex;
 
@@ -102,6 +111,8 @@ const status = (state = initialState, action) => {
       return newState;
     }
     case STICK_QUESTION_MARK: {
+      if (state.gameStatus === "Fail") return state;
+
       const newState = { ...state };
       const { row, col } = action.payload.clickedCellIndex;
 
@@ -116,6 +127,8 @@ const status = (state = initialState, action) => {
       return newState;
     }
     case RESET_CELL: {
+      if (state.gameStatus === "Fail") return state;
+
       const newState = { ...state };
       const { row, col } = action.payload.clickedCellIndex;
 
@@ -132,6 +145,12 @@ const status = (state = initialState, action) => {
       newState.table[row][col] = FLAG.EMPTY;
 
       return newState;
+    }
+    case TIMEOUT: {
+      return {
+        ...state,
+        gameStatus: GAME_STATUS.FAIL,
+      };
     }
     default: {
       return state;
