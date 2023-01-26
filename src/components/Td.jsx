@@ -59,7 +59,14 @@ class Td extends React.PureComponent {
         className={`${styleConfig.cell[gameStatus][content]} m-10 h-6 min-h-full w-6 min-w-full cursor-pointer  rounded-md border-2 border-solid border-sky-500  p-1 text-xs shadow-inner sm:h-9 sm:w-9 sm:text-base`}
         onMouseDown={e => this.handleMouseDown(e, { row, col })}
         onMouseUp={e => this.handleMouseUp(e, { row, col })}
-        onTouchStart={e => this.handleMouseDown(e, { row, col })}
+        onTouchStart={e => {
+          this.handleMouseDown(e, { row, col });
+          e.preventDefault();
+        }}
+        onTouchEnd={e => {
+          this.handleMouseDown(e, { row, col });
+          e.preventDefault();
+        }}
         onContextMenu={e => e.preventDefault()}
         role="presentation"
       >
