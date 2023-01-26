@@ -6,7 +6,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Layout from "./Layout";
-import Mode from "./Mode";
+import Mode from "../components/Mode";
 import Game from "./Game";
 
 const router = createBrowserRouter(

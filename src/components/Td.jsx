@@ -1,36 +1,13 @@
-/* eslint-disable react/void-dom-elements-no-children */
 import React from "react";
 import PropTypes from "prop-types";
-import { FLAG, MOUSE } from "../lib/constants";
+import { FLAG, MOUSE, FLAG_CONTENT } from "../lib/constants";
+import styleConfig from "../styleConfig";
 
 class Td extends React.PureComponent {
   timerData = {};
 
   componentDidUpdate() {
     if (this.timerData.id) clearTimeout(this.timerData.id);
-  }
-
-  getContent() {
-    const { content } = this.props;
-
-    switch (content) {
-      case FLAG.MINE:
-        return "🍎";
-      case FLAG.OPENED:
-        return "✨";
-      case FLAG.EMPTY:
-        return "";
-      case FLAG.MINE_FLAG:
-        return "🏳️‍🌈";
-      case FLAG.QUESTION_MARK:
-        return "?";
-      case FLAG.AROUND_ALL_EMPTY:
-        return "0";
-
-      default: {
-        return content;
-      }
-    }
   }
 
   handleMouseDown = (e, index) => {
@@ -75,17 +52,21 @@ class Td extends React.PureComponent {
   };
 
   render() {
-    const { row, col } = this.props;
+    const { row, col, content, gameStatus } = this.props;
 
     return (
       <td
-        className="p-5 text-center border-solid border-2 border-sky-500 cursor-pointer"
+        className={`${styleConfig.cell[gameStatus][content]} m-10 h-6 min-h-full w-6 min-w-full cursor-pointer  rounded-md border-2 border-solid border-sky-500  p-1 text-xs shadow-inner sm:h-9 sm:w-9 sm:text-base`}
         onMouseDown={e => this.handleMouseDown(e, { row, col })}
         onMouseUp={e => this.handleMouseUp(e, { row, col })}
         onContextMenu={e => e.preventDefault()}
         role="presentation"
       >
-        {this.getContent()}
+        <center>
+          {content === -1 && gameStatus === "Fail"
+            ? FLAG_CONTENT.mine
+            : FLAG_CONTENT[content]}
+        </center>
       </td>
     );
   }
@@ -99,6 +80,7 @@ Td.propTypes = {
   row: PropTypes.number.isRequired,
   col: PropTypes.number.isRequired,
   content: PropTypes.number.isRequired,
+  gameStatus: PropTypes.string.isRequired,
 };
 
 export default Td;
