@@ -9,11 +9,12 @@ class WelcomeModal extends React.PureComponent {
         </div>
         <div className="text-sm">
           1. Click the cell <br />
-          ㅤㅤ⇢ number of mines around
+          ∙∙∙∙‣ number of mines around
           <br />
           2. Right Mouse Click or Click(0.3s)🤏 <br />
-          ㅤㅤ⇢ 🏳️‍🌈 <br />
-          3. Click once more <br /> ㅤㅤ⇢ ?
+          ∙∙∙∙‣ 🏳️‍🌈 <br />
+          3. Click once more <br />
+          ∙∙∙∙‣ ?
         </div>
       </div>
     );
