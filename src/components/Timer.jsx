@@ -60,6 +60,7 @@ class Timer extends React.PureComponent {
 
   render() {
     const { timer } = this.state;
+
     return (
       <div>
         <div className={`${styleConfig.header.base} grid-cols-2`}>
