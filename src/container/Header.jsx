@@ -18,8 +18,9 @@ class Header extends React.PureComponent {
 
   componentDidUpdate() {
     const { gameStatus } = this.props;
+    const { currentStatus } = this.state;
 
-    if (gameStatus === "Proceeding") return;
+    if (gameStatus === "Proceeding" && currentStatus === "😊") return;
 
     switch (gameStatus) {
       case "Proceeding": {
