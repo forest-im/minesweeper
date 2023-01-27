@@ -2,12 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Outlet } from "react-router-dom";
 import { connect } from "react-redux";
-import Header from "./Header";
+import { toggleModal } from "../redux/action";
 import withParams from "../components/withParams";
+import WelcomeModal from "../components/WelcomeModal";
 import Modal from "../components/Modal";
 import Mode from "../components/Mode";
-import WelcomeModal from "../components/WelcomeModal";
-import { toggleModal } from "../redux/action";
+import Header from "./Header";
 
 class Layout extends React.PureComponent {
   componentDidMount() {
@@ -30,7 +30,7 @@ class Layout extends React.PureComponent {
           </Modal>
         )}
         <div className="m-20 flex min-w-full flex-col items-center sm:w-100 md:w-120">
-          <div className="flex h-full min-h-[35rem] flex-col items-center rounded-xl bg-blue-400 p-7 drop-shadow-2xl sm:p-7">
+          <div className="flex h-full min-h-[35rem] flex-col items-center rounded-xl bg-blue-400 p-7 sm:p-7">
             {params.mode ? (
               <Header />
             ) : (

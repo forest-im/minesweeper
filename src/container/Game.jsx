@@ -2,7 +2,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import withParams from "../components/withParams";
 import {
   startGame,
   clickCell,
@@ -10,6 +9,7 @@ import {
   stickQuestionMark,
   resetCell,
 } from "../redux/action";
+import withParams from "../components/withParams";
 import Td from "../components/Td";
 
 class Game extends React.Component {

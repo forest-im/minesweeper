@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import Timer from "./Timer";
+import { connect } from "react-redux";
 import { startGame, timeOut, toggleModal } from "../redux/action";
 import styleConfig from "../styleConfig";
 import withParams from "../components/withParams";
+import Timer from "../components/Timer";
 
 class Header extends React.PureComponent {
   constructor(props) {
