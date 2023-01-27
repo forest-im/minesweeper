@@ -9,7 +9,7 @@
 ### Table of contents
 
 - [Build & Installation](https://github.com/h-alex2/minesweeper#build--installation)
-- [Instroduction](https://github.com/h-alex2/minesweeper#instroduction)
+- [Introduction](https://github.com/h-alex2/minesweeper#introduction)
 - [Goal](https://github.com/h-alex2/minesweeper#goal)
 - [Motivation](https://github.com/h-alex2/minesweeper#motivation)
 - [기술 스택](https://github.com/h-alex2/minesweeper#%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D)
@@ -31,7 +31,7 @@ npm start
 
 <br />
 
-## Instroduction
+## Introduction
 
 `React`의 `Class component`와 `React-Redux` `connect(mapStateToProps, mapDispatchToProps)`를 사용한 프로젝트입니다.
 
