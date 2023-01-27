@@ -6,12 +6,19 @@ import styleConfig from "../styleConfig";
 class Td extends React.PureComponent {
   timerData = {};
 
+  isMobileEvent = false;
+
   componentDidUpdate() {
     if (this.timerData.id) clearTimeout(this.timerData.id);
   }
 
   handleMouseDown = (e, index) => {
     if (e.button === MOUSE.RIGHT_MOUSE) return;
+
+    if (this.isMobileEvent) {
+      this.isMobileEvent = false;
+      return;
+    }
 
     const { onStickFlag } = this.props;
 
@@ -22,6 +29,10 @@ class Td extends React.PureComponent {
   };
 
   handleMouseUp = (e, index) => {
+    if (this.isMobileEvent) {
+      this.isMobileEvent = false;
+      return;
+    }
     const {
       onStickFlag,
       onClickCell,
@@ -56,16 +67,16 @@ class Td extends React.PureComponent {
 
     return (
       <td
-        className={`${styleConfig.cell[gameStatus][content]} m-10 h-6 min-h-full w-6 min-w-full cursor-pointer  rounded-md border-2 border-solid border-sky-500  p-1 text-xs shadow-inner sm:h-9 sm:w-9 sm:text-base`}
+        className={`${styleConfig.cell[gameStatus][content]} m-10 h-6 min-h-full w-6 min-w-full cursor-pointer  rounded-md border-2 border-solid border-sky-500  p-1 text-[10px] shadow-inner sm:h-9 sm:w-9 sm:text-base`}
         onMouseDown={e => this.handleMouseDown(e, { row, col })}
         onMouseUp={e => this.handleMouseUp(e, { row, col })}
         onTouchStart={e => {
           this.handleMouseDown(e, { row, col });
-          e.preventDefault();
+          this.isMobileEvent = true;
         }}
         onTouchEnd={e => {
-          this.handleMouseDown(e, { row, col });
-          e.preventDefault();
+          this.handleMouseUp(e, { row, col });
+          this.isMobileEvent = true;
         }}
         onContextMenu={e => e.preventDefault()}
         role="presentation"
