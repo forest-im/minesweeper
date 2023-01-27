@@ -100,6 +100,17 @@ const status = (state = initialState, action) => {
 
       const newState = { ...state };
       const { row, col } = action.payload.clickedCellIndex;
+      newState.table = Object.keys(state.minesIndexObj).length
+        ? [...state.table]
+        : mappingMinesToTable(
+            state.row,
+            state.col,
+            row,
+            col,
+            state.minesCount,
+            state.table,
+            state.minesIndexObj,
+          );
 
       if (state.table[row][col] === FLAG.MINE_FLAG) return state;
 

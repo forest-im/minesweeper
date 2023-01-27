@@ -25,7 +25,7 @@ class Td extends React.PureComponent {
     this.timerData.id = setTimeout(() => {
       onStickFlag(index);
       delete this.timerData.id;
-    }, 300);
+    }, 500);
   };
 
   handleMouseUp = (e, index) => {
@@ -33,6 +33,7 @@ class Td extends React.PureComponent {
       this.isMobileEvent = false;
       return;
     }
+
     const {
       onStickFlag,
       onClickCell,
@@ -50,6 +51,8 @@ class Td extends React.PureComponent {
     }
 
     clearTimeout(this.timerData.id);
+
+    console.log(this.isMobileEvent);
 
     if (content === FLAG.MINE_FLAG) {
       return onStickQuestionMark(index);
