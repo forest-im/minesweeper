@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Outlet } from "react-router-dom";
 import { connect } from "react-redux";
-import { toggleModal } from "../redux/action";
+import { startGame, toggleModal } from "../redux/action";
 import withParams from "../components/withParams";
 import WelcomeModal from "../components/WelcomeModal";
 import Modal from "../components/Modal";
@@ -20,13 +20,18 @@ class Layout extends React.PureComponent {
   }
 
   render() {
-    const { params, isModalShowing, dispatchToggleModal } = this.props;
+    const { params, isModalShowing, dispatchToggleModal, dispatchStartGame } =
+      this.props;
 
     return (
       <div className="flex h-full justify-center">
         {isModalShowing && (
           <Modal onClick={dispatchToggleModal}>
-            {params.mode ? <Mode /> : <WelcomeModal />}
+            {params.mode ? (
+              <Mode onClick={dispatchStartGame} />
+            ) : (
+              <WelcomeModal />
+            )}
           </Modal>
         )}
         <div className="m-20 flex min-w-full flex-col items-center sm:w-100 md:w-120">
@@ -50,6 +55,7 @@ Layout.propTypes = {
   params: PropTypes.object.isRequired,
   isModalShowing: PropTypes.bool.isRequired,
   dispatchToggleModal: PropTypes.func.isRequired,
+  dispatchStartGame: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -59,6 +65,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   dispatchToggleModal: toggleModal,
+  dispatchStartGame: startGame,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withParams(Layout));

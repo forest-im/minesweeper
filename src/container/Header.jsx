@@ -2,8 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { startGame, timeOut, toggleModal } from "../redux/action";
+import {
+  setProceedingStatus,
+  startGame,
+  timeOut,
+  toggleModal,
+} from "../redux/action";
 import styleConfig from "../styleConfig";
+import { GAME_STATUS } from "../lib/constants";
 import withParams from "../components/withParams";
 import Timer from "../components/Timer";
 
@@ -20,16 +26,19 @@ class Header extends React.PureComponent {
     const { gameStatus } = this.props;
     const { currentStatus } = this.state;
 
-    if (gameStatus === "Proceeding" && currentStatus === "😊") return;
+    if (gameStatus === GAME_STATUS.PROCEEDING && currentStatus === "😊") return;
 
     switch (gameStatus) {
-      case "Proceeding": {
+      case GAME_STATUS.START: {
         return this.setState({ currentStatus: "😊" });
       }
-      case "Fail": {
+      case GAME_STATUS.PROCEEDING: {
+        return this.setState({ currentStatus: "😊" });
+      }
+      case GAME_STATUS.FAIL: {
         return this.setState({ currentStatus: "💀" });
       }
-      case "Success": {
+      case GAME_STATUS.SUCCESS: {
         return this.setState({ currentStatus: "🤩" });
       }
       default: {
@@ -47,6 +56,7 @@ class Header extends React.PureComponent {
       dispatchTimeOut,
       dispatchStartGame,
       dispatchToggleModal,
+      dispatchSetProceedingStatus,
     } = this.props;
     const { currentStatus } = this.state;
 
@@ -61,7 +71,7 @@ class Header extends React.PureComponent {
           >
             MENU
           </button>
-          {gameStatus === "Fail" && (
+          {gameStatus === GAME_STATUS.FAIL && (
             <button
               className="cursor-pointer"
               onClick={() => dispatchStartGame(params.mode)}
@@ -77,6 +87,7 @@ class Header extends React.PureComponent {
               isModalShowing={isModalShowing}
               gameStatus={gameStatus}
               onTimeOut={dispatchTimeOut}
+              setProceedingStatus={dispatchSetProceedingStatus}
             />
           </div>
           <div>
@@ -102,6 +113,7 @@ Header.propTypes = {
   dispatchTimeOut: PropTypes.func.isRequired,
   dispatchStartGame: PropTypes.func.isRequired,
   dispatchToggleModal: PropTypes.func.isRequired,
+  dispatchSetProceedingStatus: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -113,6 +125,7 @@ const mapDispatchToProps = {
   dispatchTimeOut: timeOut,
   dispatchStartGame: startGame,
   dispatchToggleModal: toggleModal,
+  dispatchSetProceedingStatus: setProceedingStatus,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withParams(Header));

@@ -52,6 +52,7 @@ export const GAME_STATUS = {
   PROCEEDING: "Proceeding",
   FAIL: "Fail",
   SUCCESS: "Success",
+  START: "Start",
 };
 
 export const MOUSE = {

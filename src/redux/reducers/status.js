@@ -1,5 +1,6 @@
 import {
   START_GAME,
+  SET_PROCEEDING_STATUS,
   CLICK_CELL,
   STICK_MINE_FLAG,
   STICK_QUESTION_MARK,
@@ -10,7 +11,7 @@ import { MODES, FLAG, GAME_STATUS } from "../../lib/constants";
 import { checkAround, createNew2DArray, mappingMinesToTable } from "../utils";
 
 const initialState = {
-  gameStatus: GAME_STATUS.PROCEEDING,
+  gameStatus: GAME_STATUS.START,
   mode: "easy",
   table: [],
   row: 0,
@@ -28,6 +29,7 @@ const status = (state = initialState, action) => {
 
       return {
         ...initialState,
+        gameStatus: GAME_STATUS.START,
         mode,
         table: createNew2DArray(MODES[mode].ROW, MODES[mode].COL),
         row: MODES[mode].ROW,
@@ -37,8 +39,14 @@ const status = (state = initialState, action) => {
         finishCellCount: 0,
       };
     }
+    case SET_PROCEEDING_STATUS: {
+      return {
+        ...state,
+        gameStatus: GAME_STATUS.PROCEEDING,
+      };
+    }
     case CLICK_CELL: {
-      if (state.gameStatus === "Fail") return state;
+      if (state.gameStatus === GAME_STATUS.FAIL) return state;
 
       const newMinesIndexObj = state.minesIndexObj;
       const { row, col } = action.payload.clickedCellIndex;
@@ -88,7 +96,7 @@ const status = (state = initialState, action) => {
       };
     }
     case STICK_MINE_FLAG: {
-      if (state.gameStatus === "Fail") return state;
+      if (state.gameStatus === GAME_STATUS.FAIL) return state;
 
       const newState = { ...state };
       const { row, col } = action.payload.clickedCellIndex;
@@ -111,7 +119,7 @@ const status = (state = initialState, action) => {
       return newState;
     }
     case STICK_QUESTION_MARK: {
-      if (state.gameStatus === "Fail") return state;
+      if (state.gameStatus === GAME_STATUS.FAIL) return state;
 
       const newState = { ...state };
       const { row, col } = action.payload.clickedCellIndex;
@@ -127,7 +135,7 @@ const status = (state = initialState, action) => {
       return newState;
     }
     case RESET_CELL: {
-      if (state.gameStatus === "Fail") return state;
+      if (state.gameStatus === GAME_STATUS.FAIL) return state;
 
       const newState = { ...state };
       const { row, col } = action.payload.clickedCellIndex;

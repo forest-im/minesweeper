@@ -11,23 +11,12 @@ import {
 } from "../redux/action";
 import withParams from "../components/withParams";
 import Td from "../components/Td";
+import { GAME_STATUS } from "../lib/constants";
 
 class Game extends React.Component {
   componentDidMount() {
     const { params, dispatchStartGame } = this.props;
     dispatchStartGame(params.mode);
-  }
-
-  componentDidUpdate() {
-    const { gameStatus } = this.props;
-
-    if (gameStatus === "fail") {
-      console.log("game over");
-    }
-
-    if (gameStatus === "success") {
-      console.log("success");
-    }
   }
 
   render() {
@@ -45,7 +34,9 @@ class Game extends React.Component {
       <div className="flex justify-center">
         <div className="flex flex-col items-center">
           <div className="text-white">
-            {gameStatus === "Success" ? "Success!" : mode.toUpperCase()}
+            {gameStatus === GAME_STATUS.SUCCESS
+              ? "Success!"
+              : mode.toUpperCase()}
           </div>
           <table className="table-auto">
             <tbody>

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { FLAG, MOUSE, FLAG_CONTENT } from "../lib/constants";
+import { FLAG, MOUSE, FLAG_CONTENT, GAME_STATUS } from "../lib/constants";
 import styleConfig from "../styleConfig";
 
 class Td extends React.PureComponent {
@@ -67,7 +67,11 @@ class Td extends React.PureComponent {
 
     return (
       <td
-        className={`${styleConfig.cell[gameStatus][content]} m-10 h-6 min-h-full w-6 min-w-full cursor-pointer  rounded-md border-2 border-solid border-sky-500  p-1 text-[10px] shadow-inner sm:h-9 sm:w-9 sm:text-base`}
+        className={`${
+          gameStatus === "Start"
+            ? styleConfig.cell.Proceeding[content]
+            : styleConfig.cell[gameStatus][content]
+        } m-10 h-6 min-h-full w-6 min-w-full cursor-pointer  rounded-md border-2 border-solid border-sky-500  p-1 text-[10px] shadow-inner sm:h-9 sm:w-9 sm:text-base`}
         onMouseDown={e => this.handleMouseDown(e, { row, col })}
         onMouseUp={e => this.handleMouseUp(e, { row, col })}
         onTouchStart={e => {
@@ -82,7 +86,7 @@ class Td extends React.PureComponent {
         role="presentation"
       >
         <center>
-          {content === -1 && gameStatus === "Fail"
+          {content === FLAG.MINE && gameStatus === GAME_STATUS.FAIL
             ? FLAG_CONTENT.mine
             : FLAG_CONTENT[content]}
         </center>

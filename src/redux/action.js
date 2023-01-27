@@ -1,5 +1,6 @@
 import {
   START_GAME,
+  SET_PROCEEDING_STATUS,
   CLICK_CELL,
   STICK_MINE_FLAG,
   STICK_QUESTION_MARK,
@@ -9,6 +10,10 @@ import {
 } from "./actionTypes";
 
 export const startGame = mode => ({ type: START_GAME, payload: { mode } });
+
+export const setProceedingStatus = () => ({
+  type: SET_PROCEEDING_STATUS,
+});
 
 export const clickCell = clickedCellIndex => ({
   type: CLICK_CELL,
